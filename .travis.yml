@@ -8,8 +8,8 @@ before_install:
   - docker pull ansiz/docker-asciidoctor-cn
 
 script:
-  - docker run -v $TRAVIS_BUILD_DIR:/documents/ --name asciidoc-to-html asciidoctor/docker-asciidoctor asciidoctor -D dist *.adoc      
-  - docker run -v $TRAVIS_BUILD_DIR:/documents/ --name asciidoc-to-pdf asciidoctor/docker-asciidoctor asciidoctor-pdf -D dist -r asciidoctor-pdf-cjk-kai_gen_gothic -a pdf-style=KaiGenGothicCN *.adoc
+  - docker run -v $TRAVIS_BUILD_DIR:/documents/ --name asciidoc-to-html ansiz/docker-asciidoctor-cn asciidoctor -D dist *.adoc      
+  - docker run -v $TRAVIS_BUILD_DIR:/documents/ --name asciidoc-to-pdf ansiz/docker-asciidoctor-cn asciidoctor-pdf -D dist -r asciidoctor-pdf-cjk-kai_gen_gothic -a pdf-style=KaiGenGothicCN *.adoc
 
 after_error: 
   - docker logs asciidoc-to-html
