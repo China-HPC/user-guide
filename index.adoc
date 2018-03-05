@@ -34,3 +34,5 @@ image::network-schema.png[]
 - 计算网络：管理节点通过该网络连接集群中各节点，进行作业管理、存储管理等
 
 == 初始化配置
+
+- something
