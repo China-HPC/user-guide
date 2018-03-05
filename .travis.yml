@@ -20,8 +20,10 @@ after_failure:
   - docker logs asciidoc-to-pdf
 
 after_success:      
-  - cd output ; mv ../dist/* ./ ; cp -R ../images images
-  - git init
+  - cd output ; 
+  - git clone https://github.com/China-HPC/user-guide.git
+  - cd user-guide
+  - mv ../../dist/* ./dist ; cp -R ../../images images
   - git config user.name "${GH_USER_NAME}"
   - git config user.email "{GH_USER_EMAIL}"
   - git add . ; git commit -m "Deploy to GitHub Pages"
