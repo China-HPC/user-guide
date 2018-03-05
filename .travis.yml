@@ -23,7 +23,7 @@ after_success:
   - cd output ; 
   - git clone https://github.com/China-HPC/user-guide.git
   - cd user-guide
-  - mv ../../dist/* ./dist ; cp -R ../../images images
+  - mv ../../dist/* ./dist; cp -r ../../images ./dist/
   - git config user.name "${GH_USER_NAME}"
   - git config user.email "{GH_USER_EMAIL}"
   - git add . ; git commit -m "Deploy to GitHub Pages"
