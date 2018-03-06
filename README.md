@@ -5,6 +5,7 @@ Super HPC User Guide
 ## Build
 
 ### Manual build
+
 1. Install Docker and pull the image from Docker Hub:
 ```
 docker pull ansiz/docker-asciidoctor-cn
@@ -24,6 +25,7 @@ cp -r images dist/images
 docker run -v $Directory:/documents/ --rm --name asciidoc-to-pdf ansiz/docker-asciidoctor-cn asciidoctor-pdf -D dist -r asciidoctor-pdf-cjk-kai_gen_gothic -a pdf-style=KaiGenGothicCN *.adoc
 ```
 ### Auto build
+
 make some changes, commit and push to https://github.com/China-HPC/user-guide,
-`Travis` will build and deploy content to https://github.com/China-HPC/user-guide-dist automatically
+`Travis` will build and deploy content to https://github.com/China-HPC/user-guide-dist automatically
 

@@ -1,23 +1,18 @@
 = Super HPC User Guide
-:Author:    Xhzhang
-:Email:     zzz332191120@gmail.com
-:Date:      2018-02-05
-:Revision:  1.0.1
+:Author:    Dushaoxing
+:Email:     dsx6559@gmail.com
+:Date:      2018-02-12
+:Revision:  1.0
 :toc: preamble
 :idprefix:
 :numbered:
 :imagesdir: images
 
-HPC是一套及集群调度、管理、监控为一体的集群管理软件，可应用在各种科研及工业领域，通过我们的软件可以方便的调度集群的运算力为客户产生价值。该手册帮助用户了解如何使用HPC系统。
-
+*HPC是一套及集群调度、管理、监控为一体的集群管理软件，可应用在各种科研及工业领域，通过我们的软件可以方便的调度集群的运算力为客户产生价值。该手册帮助用户了解如何使用HPC系统。*
 
 == 系统逻辑架构
-
-.系统逻辑架构图
 image::network-schema.png[]
-
 === 节点类型
-
 - 管理节点:
   * 运行系统管理进程与支撑服务
   * 支持两个管理节点组成HA
@@ -28,11 +23,737 @@ image::network-schema.png[]
   * 表现为全局共享文件系统
 
 === 网络类型
-
-- 管理网络：用户通过管理网络直接访问管理节点
-- BMC网络：管理节点通过该网络连接集群中各节点的BMC设备，通过IPMI指令对节点进行开/关机操作、节点状态检测等
-- 计算网络：管理节点通过该网络连接集群中各节点，进行作业管理、存储管理等
+- 管理网络:
+  * 用户通过管理网络直接访问管理节点
+- BMC网络:
+  * 管理节点通过该网络连接集群中各节点的BMC设备，通过IPMI指令对节点进行开/关机操作、节点状态检测等
+- 计算网络：
+  * 管理节点通过该网络连接集群中各节点，进行作业管理、存储管理等
 
 == 初始化配置
-
 - License配置
+
+image::system-license_1.png[]
+您必须拥有正确的产品许可才能正常使用本产品，许可信息中包含许可有效期、授权节点数量以及产品功能等信息，您可以通过菜单中**系统工具 -> 许可信息**找到当前的许可信息，若要更新产品许可，请上传新的License文件。
+
+image::system-license_2.png[]
+_版权信息可根据您的需求通过修改安装目录下的ABOUT文件进行编辑_
+
+- *节点配置*
+  * 在完成安装后，请以管理员身份登陆系统，点击主界面图例上的设置按钮进入节点配置界面，请根据实际情况完善机柜、节点角色、IPMI等信息。
+
+- *机柜配置*
+  * 产品中的机柜为逻辑机柜，机柜中单个节点高度均为1U，绘制高度为10像素，方便您对节点进行组织并展示于主控面板中。机柜配置使用文本格式，请依次填写机柜名、机柜容纳节点的数量、绘图时X坐标、绘图时Y坐标等信息，以逗号分隔，每行为一个机柜。
+
+image::system-node-config_1.png[]
+_机架单位是美国电子工业联盟（EIA）用来标定服务器、网络交换机等机房设备的单位。一个机架单位实际上为高度1.75英寸（44毫米），宽度为主流的19英寸（480毫米）及较少用的23英寸（580毫米）。 一个机架单位一般叫做"1U"， 2个机架单位则称之为"2U"，如此类推。_
+
+image::system-node-config_2.png[]
+产品部署后会自动收集各个节点的信息，在此基础上，请为各个节点配置下列信息：
+
+  * 角色：用于区分节点角色，默认内置M（管理）、E（计算）、I（I/O）、T（登陆）四种角色
+  * 机柜：机柜名
+  * 机柜位置：机柜插槽位
+  * IPMI IP（可选）：用于节点开关机操作
+
+_删除节点：若需删除节点，请停用该节点上的hpc 服务，然后在管理节点中执行命令：hpc node delete [节点名] 清除节点相关数据。_
+
+
+
+- *IPMI配置（可选）*
+
+image::system-node-config_3.png[]
+_您可以根据实际情况配置IPMI命令，例如: ipmitool -I lanplus -U root -P root ，无需指定IP以及开关机命令, 系统会根据您的操作自动补充-H {IP} chassis power {操作指令}_
+
+- *邮件配置（可选）*
+
+image::system-email-config.png[]
+_请根据实际需求配置邮件选项，用于发送报警邮件。_
+
+- *公告配置（可选）*
+
+image::system-notice.png[]
+_请根据实际需求配置公告配置，用于在**首页**显示公告信息。_
+
+
+
+== 功能介绍
+- *主控面板*
+
+image::main-control-panel.png[]
+主控面板提供了整个集群的信息概览，便于快速了解整个集群的工作状态，主控面板默认情况下左右分屏展示分为**主视图区和辅助视图区**，您可以通过机柜视图区提供的快捷菜单切换或隐藏辅助视图区的内容。
+
+- *主视图区*
+
+主视图区主要用于快速查看节点运行状态，您可以以机柜视图、拓扑视图或节点列表的方式查看各节点信息，方便快捷的完成各种节点相关的操作。
+
+
+image::main-view-area.png[]
+- 机柜视图
+在此区域内您可以点选、拖拽、放大机柜信息，可以快速查看各个节点的状态及系统信息，通过主视图区域右侧面板上的快捷按钮可以完成节点登陆、开关机、监控信息查看等操作。系统会根据各个节点的状态以不同颜色的状态灯和背景色绘制机柜图，节点状态一目了然。
+
+- *拓扑图配置*
+
+您可以在拓扑视图中根据您的实际情况配置拓扑视图，具体操作方式:
+
+  * 添加设备：在任意空白处单击鼠标右键，点击**添加设备**菜单，选择设备类型，勾选或者输入设备名称，点击确认完成添加。
+  * 连接设备：在任意设备上单机鼠标右键，点击**连接**菜单，移动鼠标选择目标设备即可完成连线，在连线过程中点击任意空白处即可取消连线。
+  * 移除设备：在任意设备上单机鼠标右键，点击**移除**菜单即可移除该设备，与该设备连接的所有连线将会一并移除。
+  * 编辑连线：在任意设备上单机鼠标右键，点击**编辑**即可编辑该设备上的连线关系。
+
+image::topology.png[]
+
+- 节点列表
+
+image::mgmt-node.png[]
+以列表的形式查看节点信息，可快速搜索、过滤节点。
+
+- *辅助视图区*
+
+辅助视图区默认展示集群信息概览，您可以通过主视图区提供的快捷菜单切换或隐藏辅助视图区的内容。
+
+- 管理员dashboard
+以管理员身份查看集群概览信息，包括：
+* 汇总的集群资源监控信息，便于快速了解集群当前的资源状态。
+* 集群资源的使用报表，便于快速了解集群近段时间的工作情况及使用率等信息。
+
+image::managers-dashboard.png[]
+
+- 用户dashboard
+以用户身份登陆可查看最近某段时间该用户的作业提交情况以及最近进行的关键操作，如下图所示：
+
+image::user-dashboard.png[]
+
+- 节点登陆
+
+选择节点后点击控制面板上的bash按钮可登录到该节点，辅助视图区将用于TTY交互操作：
+
+image::node-land.png[]
+
+- 节点监控信息
+
+选择节点后点击控制面板上的监控图按钮可查看该节点的监控信息，辅助视图区将用于监控信息展示：
+
+image::monitor-center.png[]
+
+- 其他功能
+
+除此之外辅助视图区还可用于**文件管理、监控报警**查看等功能。
+
+您可以通过导航栏快捷菜单或左侧主菜单跳转到其他功能界面
+
+
+
+== 作业系统
+- 实时作业
+
+image::scheduler-job_1.png[]
+实时作业为您提供系统当前未完成的所有作业的信息概览，您可以通过状态筛选或查找快速定位您关心的作业。
+
+image::scheduler-job_2.png[]
+点击作业ID可查看对应作业的详细信息，  在详情页中可以查看到完整的作业信息，更可以通过查看实时输出了解您的作业实时运行情况。
+
+image::scheduler-job-add_1.png[]
+点击新建作业，选择所需的应用类型（应用类型介绍详见下列**应用模板**），填写对应参数即可向系统中提交作业。
+
+image::scheduler-job-add_2.png[]
+高级选项中为您提供了更丰富的作业参数配置项，您可以将填写的各种参数保存为模板方便下次提交相似作业，具体操作详见下列**作业模板**
+
+- 历史作业
+
+image::scheduler-history-job.png[]
+结束运行后的作业在一段时间（默认为5分钟）后会转移到历史作业列表中，您可以在此处进行历史作业信息查询、下载作业输出文件等操作。
+
+- 队列配置
+
+image::scheduler-partition.png[]
+一组包含特定特征的节点可组合成一个队列，通过队列配置菜单您可以方便快捷的新增、修改、删除调度系统的队列以满足不同的作业需求。
+
+- 作业模板
+
+image::scheduler-template.png[]
+将作业参数保存为作业模板可以让您方便快速的提交相似的作业，选择任一模板点击使用即可进入作业提交界面并自动填充模板中已定义好的参数，您只需修改少量参数即可提交作业。
+
+- 应用模板
+
+image::scheduler-app_1.png[]
+除了基本的脚本提交之外，HPC系统还为您提供了可自定义的应用模板。只需几步便可创建使用您所需的任意应用模板，满足特定的应用计算需求：
+
+* 步骤1：定义应用模板
+
+image::scheduler-app_2.png[]
+填写应用中英文名称，然后定义命令行模板。命令行模板中支持“环境变量”和“应用参数”两种变量，分别以**$变量名和{{.变量名}}**表示，以下图为例，名为“测试”的应用模板定义了如下命令行模板：
+
+image::scheduler-app_3.png[]
+* 步骤2：定义应用界面
+
+image::scheduler-app_4.png[]
+从组件库中拖拽您所需的组件，以步骤1定义的命令行模板中的应用变量名为组件命名。本例中命名为STR
+
+* 步骤3：使用应用模板
+
+image::scheduler-app_5.png[]
+使用应用模板提交作业，按照我们的定义，该作业将会依次输出下列内容：
+
+image::scheduler-app_6.png[]
+
+- 脚本规范
+
+image::script.png[]
+
+- 文件管理
+
+image::scheduler-file-manager.png[]
+文件管理功能为您提供窗口化的文件管理界面
+
+
+
+== 集群管理
+
+- 节点管理
+
+image::mgmt-node(2).png[]
+- 节点管理列表中列出了当前系统中所有的节点，你可以对任意节点进行下列操作：
+
+* 登录节点
+* 查看监控信息
+* 开关机/重启
+* 设置允许/拒绝提交作业
+
+- 并行命令
+
+image::mgmt-pcm.png[]
+并行命令用于快速批量并行地在指定节点上执行相同命令
+
+- 进程管理
+
+image::mgmt-process.png[]
+进程管理中列出了指定节点的进程信息，您可以在此处管理您服务器上运行的进程。
+
+- 共享管理
+
+image::mgmt-share.png[]
+共享管理中支持新增共享卷和挂载选项，目前支持的文件系统有：NFS，Lustre
+
+
+== 集群监控
+
+- 监控报警
+
+image::monitor-alarm.png[]
+监控报警中记录了集群各节点监控的各种指标的警报信息
+
+image::monitor-alarm-set.png[]
+你可以为启用或禁用各个监控指标，也可以为他们设置不同的监控阈值。
+
+image::monitor-alarm-set_2.png[]
+您可以启用或禁用报警邮件通知，可以设置多个报警邮件接收人。
+
+- 服务状态
+
+image::monitor-service.png[]
+服务状态列出了当前受到监控的各项服务的运行状态，您可以自由的启用或禁用对某个服务的监控。如果您希望监控更多的服务，可以通过向/usr/hpc/monit目录中加入更多的符合标准的脚本或可执行程序来扩展服务监控。
+点击**服务设置**可为各个服务监控脚本配置运行所需的角色信息。
+
+image::monitor-service-setting.png[]
+
+
+
+== 集群报表
+
+- 资源报表
+
+image::report-resource.png[]
+在资源报表中可以选择导出Excel或PDF
+
+- 计费报表
+
+image::report-charge.png[]
+在计费报表中可以选择导出Excel或PDF
+
+
+
+== 用户资源
+
+- 用户管理
+
+image::user-list.png[]
+在用户管理界面中可实现增加,删除系统用户
+
+- 权限管理
+
+image::user-config.png[]
+可根据不同的用户给与不同的权限
+
+- 资源限制
+
+image::user-limit.png[]
+集群、用户、资源组、分区四个参数可构成一组唯一的关联信息，您可以为任意关联信息设置计算资源、最大作业数及最大提交数限制。
+
+- 资源预留
+
+image::user-resource-rsrv.png[]
+您可以为指定的用户在指定的时段内预留指定的计算节点，被预留的计算节点在该时段内不会被其他用户的作业所占用，该功能也可以用于停机维护某些节点。
+
+- 资源组管理
+
+image::user-account.png[]
+您可以为调度系统创建或删除资源组账户，用于资源限制功能中创建资源限制关联信息实现资源限制
+
+
+
+
+== 附录
+
+=== 作业状态对照表
+
+|===
+|编码缩写(Short code) |状态名(State) |英文含义 (meaning) |中文翻译
+
+|BF
+|BOOT_FAIL
+|Job terminated due to launch failure, typically due to a hardware failure (e.g. unable to boot the node or block and the job can not be requeued).
+|作业由于启动失败而终止，通常是由于硬件故障。
+
+|CA
+|CANCELLED
+|Job was explicitly cancelled by the user or system administrator. The job may or may not have been initiated.
+|作业被用户或系统管理员终止，该作业可能已经启动或者没有启动。
+
+|CD
+|COMPLETED
+|Job has terminated all processes on all nodes with an exit code of zero.
+|作业包含的每个进程在所有节点上都已结束且没有出现问题。
+
+|CF
+|CONFIGURING
+|Job has been allocated resources, but are waiting for them to become ready for use (e.g. booting).
+|作业已经被分配资源，正在等待所有资源准备就绪。
+
+|CG
+|COMPLETING
+|Job is in the process of completing. Some processes on some nodes may still be active.
+|作业正在完成中。某些节点上的某些进程可能仍然是活动的。
+
+|F
+|FAILED
+|Job terminated with non-zero exit code or other failure condition.
+|非零退出码结束或其他错误导致的作业终止。
+
+|NF
+|NODE_FAIL
+|Job terminated due to failure of one or more allocated nodes.
+|作业由于一个或多个分配的节点的故障而终止。
+
+|PD
+|PENDING
+|Job is awaiting
+|正在等待资源分配。
+
+|PR
+|PREEMPTED
+|Job terminated due to preemption.
+|作业由于资源被抢占而终止。
+
+|RV
+|REVOKED
+|Sibling was removed from cluster due to other cluster starting the job.
+|作业已转移到其他集群上。
+
+|R
+|RUNNING
+|Job currently has an allocation.
+|作业正在运行中。
+
+|SE
+|SPECIAL_EXIT
+|The job was requeued in a special state. This state can be set by users, typically in EpilogSlurmctld, if the job has terminated with a particular exit value.
+|特殊状态下的重新排队，该状态通常是由用户配置的EpilogSlurmctld设置的。
+
+|ST
+|STOPPED
+|Job has an allocation, but execution has been stopped with SIGSTOP signal. CPUS have been retained by this job.
+|作业已经分配运行，但执行过程由于接收到SIGSTOP信号而停止，该作业将继续保有已分配的CPU。
+
+|S
+|SUSPENDED
+|Job has an allocation, but execution has been suspended and CPUs have been released for other jobs.
+|作业在执行过程中被挂起，所分配的资源将被释放用于其他作业。
+
+|TO
+|TIMEOUT
+|Job terminated upon reaching its time limit.
+|工作在达到期限后终止。
+
+|===
+
+
+
+
+=== 配置文件（app.conf）
+
+|===
+|配置项 |用途 |default
+
+|Webserver配置:
+|
+|
+
+
+|AppName
+|应用名称
+|hpc-backend
+
+|ProductName
+|显示在登录界面的产品名称
+|SuperHPC
+
+|ProductLogo
+|显示于登陆界面及菜单之上的logo名称
+|SuperHPC
+
+|AppData
+|程序安装目录
+| /usr/hpc
+
+|WebAppPath
+|前端文件存放位置
+|/usr/hpc/webapp
+
+|HTTPPort
+|HTTP服务端口
+|8080
+
+|RunMode
+|运行模式
+|dev(生产环境中应为prod)
+
+|AutoRender
+|自动渲染
+|false
+
+|CopyRequestbody
+|请求参数解析
+|true
+
+|EnableDocs
+|是否开启API文档
+|false
+
+|EnableErrorsRender
+|是否由框架渲染错误信息
+|false
+
+|EnableAdmin
+|是否启用webserver监控后台
+|false
+
+|AdminAddr
+|webserver监控后台绑定地址
+|0.0.0.0
+
+|AdminPort
+|webserver监控后台绑定端口
+|8088
+
+|HTTPAddr
+|HTTP服务绑定地址
+|0.0.0.0
+
+|EnableHTTPS
+|是否启用HTTPS
+|true
+
+|HTTPSPort
+|HTTPS端口
+|443
+
+|HTTPSCertFile
+|证书路径
+|/usr/hpc/conf/cert.pem
+
+|HTTPSKeyFile
+|私钥路径
+|/usr/hpc/conf/key.pem
+
+|Redis配置:
+|
+|
+
+
+|RedisDB
+|Redis数据库
+|0
+
+|RedisPasswd
+|Redis密码
+|空
+
+|RedisHost
+|Redis主机IP
+|127.0.0.1
+
+|RedisPort
+|Redis端口号
+|6379
+
+|RedisMaxIdle
+|Redis最大空闲连接数
+|10
+
+|RedisMaxActive
+|Redis最大连接数
+|100
+
+|RedisMaxTimeout
+|Redis连接超时时限
+|默认120秒
+
+|MySQL配置：
+|
+|
+
+
+|DBHost
+|MySQL主机地址
+|localhost
+
+
+|DBPort
+|MySQL端口号
+|3306
+
+|DBName
+|MySQL数据库名
+|
+
+|DBPasswd
+|MySQL数据库密码
+|空
+
+|DBUser
+|MySQL用户名
+|root
+
+|DBDebug
+|数据库是否开启调试模式
+|flase
+
+|HPC配置：
+|
+|
+
+|HPCGroupID
+|允许执行命令行操作的group id
+|0
+
+|ModelAdapter
+|数据库适配器
+|mysql
+
+|SchedulerType
+|调度管理器类型
+|slurm
+
+|PowerSeparation
+|是否开启权限分离
+|false
+
+|JWTSecret
+|签署Token所用的密钥
+|
+
+|MonitorInterval
+|监控数据采集间隔
+|30秒
+
+|AuthProvider
+|身份认证方式
+|basic（建议为NIS或LDAP）
+
+|NISServer
+|NIS服务主机名
+|
+
+|NISAdmin
+|NIS服务管理员用户
+|root
+
+|NISMaker
+|NIS更新数据库所用的脚本
+|make -C /var/yp
+
+|LicensePath
+|License文件存放位置
+|/usr/hpc/license
+
+|LicensePlugin
+|License插件名
+|license.so
+
+|License
+|License文件名
+|license.lic
+
+|Email
+|Email服务配置
+|{"Enable":false}
+
+|MailCMD
+|邮件客户端命令
+|mail
+
+|MailChanBufferSize
+|邮件发件箱缓冲区大小
+|1024
+
+|EnableLogger
+|是否开启调试日志
+|关闭
+
+|ClusterName
+|集群名
+|unspecified
+
+|RRDDir
+|RRD文件存放位置
+|/var/lib/ganglia/rrds
+
+|InterfaceHost
+|管理节点网卡名
+|
+
+|InterfaceAgent
+|与计算节点相连的网卡名
+|
+
+|JobCollectInterval
+|作业信息收集频率
+|5分钟收集一次
+
+|APPDir
+|应用模板存放路径
+|$HPC_ROOT/applications
+
+|WorkDir
+|应用模板作业路径
+|$HPC_ROOT/applications
+
+|MonitorProvider
+|监控模块适配器
+|ganglia
+
+|AboutFile
+|版权信息描述文件路径
+|$HPC_ROOT/ABOUT
+
+|LDAP配置：
+|
+|
+
+|LDAPHost
+|LDAP主机
+|
+
+|LDAPPort
+|LDAP端口
+|389
+
+|LDAPEnableSSL
+|开启SSL
+|false
+
+|LDAPUserRDN
+|LDAP条目
+|
+
+|LDAPServerName
+|LDAP服务名称
+|
+
+|LDAPAdminDN
+|LDAP管理员条目
+|
+
+|LDAPAdminPassword
+|LDAP管理员密码
+|
+
+|LDAPMinUID
+|LDAP最小uid
+|1000
+
+|LDAPMaxUID
+|LDAP最大uid
+|65535
+
+|LDAPAttrHomeDir
+|
+|homeDirectory
+
+|LDAPAttrUID
+|
+|uidNumber
+
+|LDAPAttrGID
+|
+|gidNumber
+
+|LDAPAttrLoginShell
+|
+|loginShell
+
+|LDAPAttrPassword
+|
+|userPassword
+
+|LDAPUserObjectClasses
+|
+|inetOrgPerson;organizationalPerson;posixAccount
+
+|global配置：
+|
+|
+
+|RedisHost
+|管理节点的Redis服务地址
+|根据各节点实际网络情况配置
+
+|RedisPort
+|管理节点的Redis服务端口
+|6379
+
+|TTYPort
+|TTY服务端口号
+|8080
+
+|HealthCheckInterval
+|agent服务健康检查周期
+|60秒
+
+|HeartBeatInterva
+|agent心跳包发送频率
+|10秒
+
+|ServicesMonitScriptsDir
+|服务监控脚本存放位置
+|$HPC_ROOT/monit
+
+|MgmtSubnetMask
+|管理网络子网掩码
+|255.255.255.0
+
+|PCMOutputDir
+|并行命令输出路径
+|/home/pcm
+
+|PcmMaxOutput
+|并行命令最大输出字节数
+|1024
+
+|PcmChanBufferSize
+|并行命令缓冲区大小
+|500条
+
+|===
+
