@@ -1,14 +1,13 @@
 = Super HPC User Guide
-:Author:    Dushaoxing
+:Revision:  1.0.0
 :Email:     dsx6559@gmail.com
 :Date:      2018-02-12
-:Revision:  1.0
 :toc: preamble
 :idprefix:
 :numbered:
 :imagesdir: images
 
-*HPC是一套及集群调度、管理、监控为一体的集群管理软件，可应用在各种科研及工业领域，通过我们的软件可以方便的调度集群的运算力为客户产生价值。该手册帮助用户了解如何使用HPC系统。*
+*HPC是一套集群调度、管理、监控为一体的集群管理软件，可应用在各种科研及工业领域，通过我们的软件可以方便的调度集群的运算力为客户产生价值。该手册帮助用户了解如何使用HPC系统。*
 
 == 系统逻辑架构
 image::network-schema.png[]
@@ -31,7 +30,7 @@ image::network-schema.png[]
   * 管理节点通过该网络连接集群中各节点，进行作业管理、存储管理等
 
 == 初始化配置
-- License配置
+=== License配置
 
 image::system-license_1.png[]
 您必须拥有正确的产品许可才能正常使用本产品，许可信息中包含许可有效期、授权节点数量以及产品功能等信息，您可以通过菜单中**系统工具 -> 许可信息**找到当前的许可信息，若要更新产品许可，请上传新的License文件。
@@ -39,10 +38,10 @@ image::system-license_1.png[]
 image::system-license_2.png[]
 _版权信息可根据您的需求通过修改安装目录下的ABOUT文件进行编辑_
 
-- *节点配置*
+=== 节点配置
   * 在完成安装后，请以管理员身份登陆系统，点击主界面图例上的设置按钮进入节点配置界面，请根据实际情况完善机柜、节点角色、IPMI等信息。
 
-- *机柜配置*
+=== 机柜配置
   * 产品中的机柜为逻辑机柜，机柜中单个节点高度均为1U，绘制高度为10像素，方便您对节点进行组织并展示于主控面板中。机柜配置使用文本格式，请依次填写机柜名、机柜容纳节点的数量、绘图时X坐标、绘图时Y坐标等信息，以逗号分隔，每行为一个机柜。
 
 image::system-node-config_1.png[]
@@ -59,18 +58,19 @@ image::system-node-config_2.png[]
 _删除节点：若需删除节点，请停用该节点上的hpc 服务，然后在管理节点中执行命令：hpc node delete [节点名] 清除节点相关数据。_
 
 
+=== 其他配置
 
-- *IPMI配置（可选）*
+- IPMI配置（可选）
 
 image::system-node-config_3.png[]
 _您可以根据实际情况配置IPMI命令，例如: ipmitool -I lanplus -U root -P root ，无需指定IP以及开关机命令, 系统会根据您的操作自动补充-H {IP} chassis power {操作指令}_
 
-- *邮件配置（可选）*
+- 邮件配置（可选）
 
 image::system-email-config.png[]
 _请根据实际需求配置邮件选项，用于发送报警邮件。_
 
-- *公告配置（可选）*
+- 公告配置（可选）
 
 image::system-notice.png[]
 _请根据实际需求配置公告配置，用于在**首页**显示公告信息。_
@@ -78,12 +78,12 @@ _请根据实际需求配置公告配置，用于在**首页**显示公告信息
 
 
 == 功能介绍
-- *主控面板*
+=== 主控面板
 
 image::main-control-panel.png[]
 主控面板提供了整个集群的信息概览，便于快速了解整个集群的工作状态，主控面板默认情况下左右分屏展示分为**主视图区和辅助视图区**，您可以通过机柜视图区提供的快捷菜单切换或隐藏辅助视图区的内容。
 
-- *主视图区*
+=== 主视图区
 
 主视图区主要用于快速查看节点运行状态，您可以以机柜视图、拓扑视图或节点列表的方式查看各节点信息，方便快捷的完成各种节点相关的操作。
 
@@ -92,7 +92,7 @@ image::main-view-area.png[]
 - 机柜视图
 在此区域内您可以点选、拖拽、放大机柜信息，可以快速查看各个节点的状态及系统信息，通过主视图区域右侧面板上的快捷按钮可以完成节点登陆、开关机、监控信息查看等操作。系统会根据各个节点的状态以不同颜色的状态灯和背景色绘制机柜图，节点状态一目了然。
 
-- *拓扑图配置*
+=== 拓扑图配置
 
 您可以在拓扑视图中根据您的实际情况配置拓扑视图，具体操作方式:
 
@@ -108,7 +108,7 @@ image::topology.png[]
 image::mgmt-node.png[]
 以列表的形式查看节点信息，可快速搜索、过滤节点。
 
-- *辅助视图区*
+=== 辅助视图区
 
 辅助视图区默认展示集群信息概览，您可以通过主视图区提供的快捷菜单切换或隐藏辅助视图区的内容。
 
@@ -130,6 +130,10 @@ image::user-dashboard.png[]
 
 image::node-land.png[]
 
+选择节点后点击控制面板上的远程连接按钮进行vnc/rdp配置，并进行远程连接；
+
+image::node-details_1.png[]
+
 - 节点监控信息
 
 选择节点后点击控制面板上的监控图按钮可查看该节点的监控信息，辅助视图区将用于监控信息展示：
@@ -145,7 +149,7 @@ image::monitor-center.png[]
 
 
 == 作业系统
-- 实时作业
+=== 实时作业
 
 image::scheduler-job_1.png[]
 实时作业为您提供系统当前未完成的所有作业的信息概览，您可以通过状态筛选或查找快速定位您关心的作业。
@@ -159,22 +163,22 @@ image::scheduler-job-add_1.png[]
 image::scheduler-job-add_2.png[]
 高级选项中为您提供了更丰富的作业参数配置项，您可以将填写的各种参数保存为模板方便下次提交相似作业，具体操作详见下列**作业模板**
 
-- 历史作业
+=== 历史作业
 
 image::scheduler-history-job.png[]
 结束运行后的作业在一段时间（默认为5分钟）后会转移到历史作业列表中，您可以在此处进行历史作业信息查询、下载作业输出文件等操作。
 
-- 队列配置
+=== 队列配置
 
 image::scheduler-partition.png[]
 一组包含特定特征的节点可组合成一个队列，通过队列配置菜单您可以方便快捷的新增、修改、删除调度系统的队列以满足不同的作业需求。
 
-- 作业模板
+=== 作业模板
 
 image::scheduler-template.png[]
 将作业参数保存为作业模板可以让您方便快速的提交相似的作业，选择任一模板点击使用即可进入作业提交界面并自动填充模板中已定义好的参数，您只需修改少量参数即可提交作业。
 
-- 应用模板
+=== 应用模板
 
 image::scheduler-app_1.png[]
 除了基本的脚本提交之外，HPC系统还为您提供了可自定义的应用模板。只需几步便可创建使用您所需的任意应用模板，满足特定的应用计算需求：
@@ -201,7 +205,7 @@ image::scheduler-app_6.png[]
 
 image::script.png[]
 
-- 文件管理
+=== 文件管理
 
 image::scheduler-file-manager.png[]
 文件管理功能为您提供窗口化的文件管理界面
@@ -210,7 +214,7 @@ image::scheduler-file-manager.png[]
 
 == 集群管理
 
-- 节点管理
+=== 节点管理
 
 image::mgmt-node(2).png[]
 - 节点管理列表中列出了当前系统中所有的节点，你可以对任意节点进行下列操作：
@@ -220,17 +224,17 @@ image::mgmt-node(2).png[]
 * 开关机/重启
 * 设置允许/拒绝提交作业
 
-- 并行命令
+=== 并行命令
 
 image::mgmt-pcm.png[]
 并行命令用于快速批量并行地在指定节点上执行相同命令
 
-- 进程管理
+=== 进程管理
 
 image::mgmt-process.png[]
 进程管理中列出了指定节点的进程信息，您可以在此处管理您服务器上运行的进程。
 
-- 共享管理
+=== 共享管理
 
 image::mgmt-share.png[]
 共享管理中支持新增共享卷和挂载选项，目前支持的文件系统有：NFS，Lustre
@@ -238,7 +242,7 @@ image::mgmt-share.png[]
 
 == 集群监控
 
-- 监控报警
+=== 监控报警
 
 image::monitor-alarm.png[]
 监控报警中记录了集群各节点监控的各种指标的警报信息
@@ -249,7 +253,7 @@ image::monitor-alarm-set.png[]
 image::monitor-alarm-set_2.png[]
 您可以启用或禁用报警邮件通知，可以设置多个报警邮件接收人。
 
-- 服务状态
+=== 服务状态
 
 image::monitor-service.png[]
 服务状态列出了当前受到监控的各项服务的运行状态，您可以自由的启用或禁用对某个服务的监控。如果您希望监控更多的服务，可以通过向/usr/hpc/monit目录中加入更多的符合标准的脚本或可执行程序来扩展服务监控。
@@ -261,12 +265,12 @@ image::monitor-service-setting.png[]
 
 == 集群报表
 
-- 资源报表
+=== 资源报表
 
 image::report-resource.png[]
 在资源报表中可以选择导出Excel或PDF
 
-- 计费报表
+=== 计费报表
 
 image::report-charge.png[]
 在计费报表中可以选择导出Excel或PDF
@@ -275,33 +279,79 @@ image::report-charge.png[]
 
 == 用户资源
 
-- 用户管理
+=== 用户管理
 
 image::user-list.png[]
 在用户管理界面中可实现增加,删除系统用户
 
-- 权限管理
+=== 权限管理
 
 image::user-config.png[]
 可根据不同的用户给与不同的权限
 
-- 资源限制
+=== 资源限制
 
 image::user-limit.png[]
 集群、用户、资源组、分区四个参数可构成一组唯一的关联信息，您可以为任意关联信息设置计算资源、最大作业数及最大提交数限制。
 
-- 资源预留
+=== 资源预留
 
 image::user-resource-rsrv.png[]
 您可以为指定的用户在指定的时段内预留指定的计算节点，被预留的计算节点在该时段内不会被其他用户的作业所占用，该功能也可以用于停机维护某些节点。
 
-- 资源组管理
+=== 资源组管理
 
 image::user-account.png[]
 您可以为调度系统创建或删除资源组账户，用于资源限制功能中创建资源限制关联信息实现资源限制
 
 
+== 轻量级虚拟化
 
+通过`Singularity`容器虚拟化技术，您可以将原有的应用环境无缝与HPC系统相结合，从而实现应用环境的兼容。`Singularity`可以用于打包整个科学计算所需的工作流程，软件和库甚至数据。无需配置文件挂载或虚拟网络，`Singularity`比`Docker`更适用于HPC环境，并且与`Docker`镜像兼容。您只需如下几步即可完成应用环境的集成：
+
+=== 安装Singularity
+
+以CentOS上安装2.5.1版本为例：
+```
+VERSION=2.5.1
+wget https://github.com/singularityware/singularity/releases/download/$VERSION/singularity-$VERSION.tar.gz
+tar xvf singularity-$VERSION.tar.gz
+cd singularity-$VERSION
+./configure --prefix=/usr/local
+make
+sudo make install
+yum install -y squashfs-tools
+```
+更多安装方式请参考： http://singularity.lbl.gov/install-linux[Singularity安装文档]
+
+=== 制作镜像
+
+以基于Ubuntu定制镜像为例：
+```
+singularity build --writable ubuntu.img docker://ubuntu
+```
+该操作会在执行命令的当前路径下生成一个ubuntu.img的镜像文件，您可以通过以下命令进入该镜像环境下执行命令：
+```
+singularity shell ubuntu.img
+```
+image::singularity-shell.png[]
+
+在该镜像中安装您的应用环境。然后您可以通过如下命令调用镜像中的程序，应用将在该镜像环境中运行：
+```
+USAGE: singularity [...] exec [exec options...] <container path> <command>
+例如：singularity exec ubuntu.img apt-get install vim
+```
+image::singularity-exec.png[]
+
+更多操作请参考： http://singularity.lbl.gov/quickstart[Singularity文档]
+
+=== 编写脚本或制作应用模版
+
+完成镜像制作后，您可以自行编写脚本以完成您所需的计算工作。只需要将原来的命令前加上singularity exec <container path>，例如：
+```
+singularity exec /home/test/ubuntu.img apt-get install vim
+```
+您也可以创建应用模版来简化该过程，模版编辑请参考：link:index.html#应用模板[应用模版]
 
 == 附录
 
@@ -757,3 +807,44 @@ image::user-account.png[]
 
 |===
 
+
+=== 初始化页面
+HPC程序在部署完成后，输入主控节点IP进行网页访问，默认第一次会进入初始化页面引导用户配置
+
+- 选择认证方式
+
+image::init-html_1.png[]
+认证方式有Basic，NIS，LDAP
+
+- NIS认证方式
+
+image::init-html_2.png[]
+
+- LDAP认证方式
+
+image::init-html_3.png[]
+选择不同的认证方式，请根据提示输入信息
+
+- 输入管理员账户
+
+image::init-html_4.png[]
+
+- 选择是否开启邮件服务
+
+image::init-html_5.png[]
+
+- 配置作业规模
+
+image::init-html_6.png[]
+
+- 设置用户区间
+
+image::init-html_7.png[]
+
+- 用户导入
+
+image::init-html_8.png[]
+
+- 导入完用户之后跳转到登陆界面，请根据实际用户信息登陆
+
+image::init-html_9.png[]
