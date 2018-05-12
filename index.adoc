@@ -307,7 +307,7 @@ image::user-account.png[]
 
 == 轻量级虚拟化
 
-通过`Singularity`容器虚拟化技术，您可以将原有的应用环境无缝与HPC系统相结合，从而实现应用环境的兼容。`Singularity`可以用于打包整个科学计算所需的工作流程，软件和库甚至数据。无需配置文件挂载或虚拟网络，`Singularity`比`Docker`更适用于HPC环境，并且与`Docker`镜像兼容。您只需如下几步即可完成应用环境的集成：
+通过 `Singularity` 容器虚拟化技术，您可以将原有的应用环境无缝与HPC系统相结合，从而实现应用环境的兼容。`Singularity` 可以用于打包整个科学计算所需的工作流程，软件和库甚至数据。无需配置文件挂载或虚拟网络，`Singularity` 比 `Docker` 更适用于HPC环境，并且与 `Docker` 镜像兼容。您只需如下几步即可完成应用环境的集成：
 
 === 安装Singularity
 
