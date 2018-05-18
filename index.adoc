@@ -50,7 +50,7 @@ _机架单位是美国电子工业联盟（EIA）用来标定服务器、网络�
 image::system-node-config_2.png[]
 产品部署后会自动收集各个节点的信息，在此基础上，请为各个节点配置下列信息：
 
-  * 角色：用于区分节点角色，默认内置M（管理）、E（计算）、I（I/O）、T（登陆）四种角色
+  * 角色：用于区分节点角色，默认内置M（管理）、C（计算）、I（I/O）、L（登陆）四种角色
   * 机柜：机柜名
   * 机柜位置：机柜插槽位
   * IPMI IP（可选）：用于节点开关机操作
@@ -132,7 +132,6 @@ image::node-land.png[]
 
 选择节点后点击控制面板上的远程连接按钮进行vnc/rdp配置，并进行远程连接；
 
-image::node-details_1.png[]
 
 - 节点监控信息
 
@@ -201,10 +200,6 @@ image::scheduler-app_5.png[]
 
 image::scheduler-app_6.png[]
 
-- 脚本规范
-
-image::script.png[]
-
 === 文件管理
 
 image::scheduler-file-manager.png[]
@@ -261,6 +256,9 @@ image::monitor-service.png[]
 
 image::monitor-service-setting.png[]
 
+- 脚本规范
+
+image::script.png[]
 
 
 == 集群报表
@@ -287,7 +285,7 @@ image::user-list.png[]
 === 权限管理
 
 image::user-config.png[]
-可根据不同的用户给与不同的权限
+可根据不同用户给与不同的权限
 
 === 资源限制
 
